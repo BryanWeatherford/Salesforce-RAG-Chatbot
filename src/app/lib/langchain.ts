@@ -21,12 +21,12 @@ const questionPrompt = PromptTemplate.fromTemplate(
   Helpful Answer:`
 );
 
-const streamingModel = new ChatOpenAI({
-  modelName: 'gpt-4o',
-  streaming: true,
-  verbose: true,
-  temperature: 0.2
-});
+// const streamingModel = new ChatOpenAI({
+//   modelName: 'gpt-4o',
+//   streaming: true,
+//   verbose: true,
+//   temperature: 0.2
+// });
 
 export async function callChain({
   question,
@@ -59,7 +59,12 @@ export async function callChain({
         }
       },
       questionPrompt,
-      streamingModel,
+      new ChatOpenAI({
+        modelName: 'gpt-4o',
+        streaming: true,
+        verbose: true,
+        temperature: 0.2
+      }),
       new BytesOutputParser()
     ]);
 
