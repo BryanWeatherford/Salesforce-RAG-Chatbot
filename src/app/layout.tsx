@@ -7,8 +7,8 @@ import { Inter as FontSans } from 'next/font/google';
 const fontSans = FontSans({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'Chat with a pdf',
-  description: 'Chat with a pdf document using the power of generative ai'
+  title: 'Saleforce RAG chatbot',
+  description: 'Saleforce RAG chatbot with pdf document files using the power of generative ai'
 };
 
 export default function RootLayout({
