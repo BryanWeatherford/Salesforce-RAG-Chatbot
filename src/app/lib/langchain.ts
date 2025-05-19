@@ -9,7 +9,8 @@ import { ChatOpenAI } from '@langchain/openai';
 
 const questionPrompt = PromptTemplate.fromTemplate(
   `You are an enthusiastic AI assistant. Use the following pieces of context to answer the question at the end. When you come across a Salesforce's earnings call term, explain it briefly.
-  If you don't know the answer, say that you don't know. Respond with ten sentences.
+  If you don't know the answer, say that you don't know.
+  Respond with about ten sentences and with some structure.
   Use the exact wording as the context.
   ----------
   CONTEXT: {context}

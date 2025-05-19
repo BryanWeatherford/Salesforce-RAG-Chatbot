@@ -6,13 +6,21 @@ import { useChat, Message } from 'ai/react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Spinner } from './ui/spinner';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 
 export function Chat() {
+  const suggestArray = [
+    'Provide concise, accurate answers to user questions.',
+    'Generate summary of key points, specific topics, or trends.'
+  ];
   const [suggestions, setSuggestions] = useState([
     'Provide concise, accurate answers to user questions.',
-    'Generate summaries of key points, specific topics, or trends.'
+    'Generate summary of key points, specific topics, or trends.'
   ]);
+
+  const [selectedSuggestion, setSelectedSuggestion] = useState(0);
+  const queryRef = useRef<HTMLInputElement | null>(null);
+  const submitRef = useRef<HTMLButtonElement | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(true);
@@ -53,17 +61,27 @@ export function Chat() {
       setTimeout(() => setShowSuggestions(false), 0);
       return;
     }
-    setInput(text);
-    setTimeout(() => {
-      setShowSuggestions(false);
-      // const newSuggestions = suggestions.filter((_s, i) => i !== index);
-      // setSuggestions(newSuggestions);
-    }, 0);
+    // setInput(text);
+    setSelectedSuggestion(index);
+    // setTimeout(() => {
+    //   setShowSuggestions(false);
+    //   // const newSuggestions = suggestions.filter((_s, i) => i !== index);
+    //   // setSuggestions(newSuggestions);
+    // }, 0);
   };
 
   const handleDelete = (id: string) => {
     setMessages(messages.filter(m => m.id !== id));
   };
+
+  const handlePreSubmit = (e: FormEvent<HTMLButtonElement>) => {
+    if (queryRef.current) {
+      const currentValue = queryRef.current.value;
+      queryRef.current.value = `${suggestArray[selectedSuggestion]} ${currentValue}`;
+      console.log("Updated query -> ", queryRef.current.value);
+      submitRef.current?.click();
+    }
+  }
 
   return (
     <>
@@ -87,6 +105,7 @@ export function Chat() {
 
             <form id="chat" onSubmit={handleSubmit} className="p-4 flex clear-both">
               <Input
+                ref={queryRef}
                 value={input}
                 placeholder={'Type to chat with AI...'}
                 onChange={handleInputChange}
@@ -104,15 +123,16 @@ export function Chat() {
                   <Spinner /> Stop
                 </Button>
               ) : (
-                <Button type="submit" className="w-24">Ask</Button>
+                <Button className="w-24" onClick={handlePreSubmit}>Ask</Button>
               )}
+              <Button ref={submitRef} type="submit" className="hidden"></Button>
             </form>
           </div>
         </div>
         <div id="rightside" style={{ width: '15%', maxWidth: '15%', padding: '16px' }}>
           {true &&
             suggestions.map((s: string, i: number) => (
-              <PromptSuggestion key={s} handleClick={handleSuggestionClick} text={s} index={i} />
+              <PromptSuggestion key={s} handleClick={handleSuggestionClick} text={s} index={i} selected={selectedSuggestion} />
             ))}
         </div>
       </div>
